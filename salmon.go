@@ -20,7 +20,7 @@ type salmon struct {
 	Vessel     string `json:"vessel"`
 	Datetime   string `json:"datetime"`
 	Location   string `json:"localtion"`
-	Holer      string `json:"holder"`
+	Holder     string `json:"holder"`
 }
 
 type deal struct {
@@ -70,11 +70,10 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	salmons := []salmon{
 		salmon{
-			ID:       "1",
 			Vessel:   "vessel no1",
 			Datetime: time.Now().Format(time.UnixDate),
 			Location: "somewhere",
-			Holer:    "someone",
+			Holder:   "someone",
 		},
 	}
 
@@ -99,7 +98,7 @@ func (s *SmartContract) recordSalmon(APIstub shim.ChaincodeStubInterface, args [
 		Vessel:   args[1],
 		Datetime: args[2],
 		Location: args[3],
-		Holer:    args[4],
+		Holder:   args[4],
 	}
 
 	salmonAsBytes, _ := json.Marshal(salmon)
@@ -108,6 +107,43 @@ func (s *SmartContract) recordSalmon(APIstub shim.ChaincodeStubInterface, args [
 	return shim.Success(nil)
 }
 
+func (s *SmartContract) changeSalmonHolder(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+	// 0      1
+	// id     owner
+
+	if len(args) != 2 {
+		return shim.Error("Incorrect number of arguments. Expecting 2")
+	}
+
+	id := args[0]
+	newHolder := args[1]
+
+	salmonAsBytes, err := APIstub.GetState(id)
+	if err != nil {
+		return shim.Error("Failed to get salmon:" + err.Error())
+	}
+	if salmonAsBytes == nil {
+		return shim.Error("Salmon does not exist")
+	}
+	salmonToTransfer := salmon{}
+	err = json.Unmarshal(salmonAsBytes, &salmonToTransfer) // unmarshal it aka JSON.parse()
+	if err != nil {
+		return shim.Error(err.Error())
+	}
+	salmonToTransfer.Holder = newHolder //change the owner
+
+	var salmon = salmon{
+		Vessel:   args[1],
+		Datetime: args[2],
+		Location: args[3],
+		Holder:   args[4],
+	}
+
+	salmonAsBytes, _ := json.Marshal(salmon)
+	APIstub.PutState(args[0], salmonAsBytes)
+
+	return shim.Success(nil)
+}
 func (s *SmartContract) queryAllCars(APIstub shim.ChaincodeStubInterface) sc.Response {
 
 	startKey := "CAR0"

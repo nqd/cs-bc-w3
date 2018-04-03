@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
@@ -18,6 +19,7 @@ type salmon struct {
 	ID         string `json:"id"`
 	Vessel     string `json:"vessel"`
 	Datetime   string `json:"datetime"`
+	Location   string `json:"localtion"`
 	Holer      string `json:"holder"`
 }
 
@@ -68,11 +70,12 @@ func (s *SmartContract) Invoke(APIstub shim.ChaincodeStubInterface) sc.Response 
 func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Response {
 	salmons := []salmon{
 		salmon{
-			ID: "1",
-			Vessel: "vessel no1",
+			ID:       "1",
+			Vessel:   "vessel no1",
 			Datetime: time.Now().Format(time.UnixDate),
-			Holer: "someone",
-		}
+			Location: "somewhere",
+			Holer:    "someone",
+		},
 	}
 
 	i := 0
@@ -86,16 +89,21 @@ func (s *SmartContract) initLedger(APIstub shim.ChaincodeStubInterface) sc.Respo
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) createCar(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
+func (s *SmartContract) recordSalmon(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 
 	if len(args) != 5 {
 		return shim.Error("Incorrect number of arguments. Expecting 5")
 	}
 
-	var car = Car{Make: args[1], Model: args[2], Colour: args[3], Owner: args[4]}
+	var salmon = salmon{
+		Vessel:   args[1],
+		Datetime: args[2],
+		Location: args[3],
+		Holer:    args[4],
+	}
 
-	carAsBytes, _ := json.Marshal(car)
-	APIstub.PutState(args[0], carAsBytes)
+	salmonAsBytes, _ := json.Marshal(salmon)
+	APIstub.PutState(args[0], salmonAsBytes)
 
 	return shim.Success(nil)
 }

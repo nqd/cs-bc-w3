@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"encoding/json"
 	"fmt"
 	"strconv"
@@ -132,78 +131,37 @@ func (s *SmartContract) changeSalmonHolder(APIstub shim.ChaincodeStubInterface, 
 	}
 	salmonToTransfer.Holder = newHolder //change the owner
 
-	var salmon = salmon{
-		Vessel:   args[1],
-		Datetime: args[2],
-		Location: args[3],
-		Holder:   args[4],
-	}
-
-	salmonAsBytes, _ := json.Marshal(salmon)
-	APIstub.PutState(args[0], salmonAsBytes)
-
-	return shim.Success(nil)
-}
-func (s *SmartContract) queryAllCars(APIstub shim.ChaincodeStubInterface) sc.Response {
-
-	startKey := "CAR0"
-	endKey := "CAR999"
-
-	resultsIterator, err := APIstub.GetStateByRange(startKey, endKey)
+	newSalmonAsByte, _ := json.Marshal(salmonToTransfer)
+	err = stub.PutState(id, newSalmonAsByte) //rewrite the marble
 	if err != nil {
 		return shim.Error(err.Error())
 	}
-	defer resultsIterator.Close()
-
-	// buffer is a JSON array containing QueryResults
-	var buffer bytes.Buffer
-	buffer.WriteString("[")
-
-	bArrayMemberAlreadyWritten := false
-	for resultsIterator.HasNext() {
-		queryResponse, err := resultsIterator.Next()
-		if err != nil {
-			return shim.Error(err.Error())
-		}
-		// Add a comma before array members, suppress it for the first array member
-		if bArrayMemberAlreadyWritten == true {
-			buffer.WriteString(",")
-		}
-		buffer.WriteString("{\"Key\":")
-		buffer.WriteString("\"")
-		buffer.WriteString(queryResponse.Key)
-		buffer.WriteString("\"")
-
-		buffer.WriteString(", \"Record\":")
-		// Record is a JSON object, so we write as-is
-		buffer.WriteString(string(queryResponse.Value))
-		buffer.WriteString("}")
-		bArrayMemberAlreadyWritten = true
-	}
-	buffer.WriteString("]")
-
-	fmt.Printf("- queryAllCars:\n%s\n", buffer.String())
-
-	return shim.Success(buffer.Bytes())
-}
-
-func (s *SmartContract) changeCarOwner(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
-
-	if len(args) != 2 {
-		return shim.Error("Incorrect number of arguments. Expecting 2")
-	}
-
-	carAsBytes, _ := APIstub.GetState(args[0])
-	car := Car{}
-
-	json.Unmarshal(carAsBytes, &car)
-	car.Owner = args[1]
-
-	carAsBytes, _ = json.Marshal(car)
-	APIstub.PutState(args[0], carAsBytes)
 
 	return shim.Success(nil)
 }
+
+func (s *SmartContract) querySalmon(APIstub shim.ChaincodeStubInterface) sc.Response {
+	// 0
+	// id
+
+	if len(args) != 1 {
+		return shim.Error("Incorrect number of arguments. Expecting 1")
+	}
+
+	id := args[0]
+
+	salmonAsBytes, err := APIstub.GetState(id)
+	if err != nil {
+		return shim.Error("Failed to get salmon:" + err.Error())
+	}
+	if salmonAsBytes == nil {
+		return shim.Error("Salmon does not exist")
+	}
+	return shim.Success(salmonAsBytes)
+}
+
+// queryAllSalmon -- used by regulator to check sustainability of supply chain
+// todo
 
 // The main function is only relevant in unit test mode. Only included here for completeness.
 func main() {

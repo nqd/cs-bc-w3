@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/hyperledger/fabric/core/chaincode/shim"
+	sc "github.com/hyperledger/fabric/protos/peer"
 )
 
 // Define the Smart Contract structure
@@ -132,7 +133,7 @@ func (s *SmartContract) changeSalmonHolder(APIstub shim.ChaincodeStubInterface, 
 	salmonToTransfer.Holder = newHolder //change the owner
 
 	newSalmonAsByte, _ := json.Marshal(salmonToTransfer)
-	err = stub.PutState(id, newSalmonAsByte) //rewrite the marble
+	err = APIstub.PutState(id, newSalmonAsByte) //rewrite the marble
 	if err != nil {
 		return shim.Error(err.Error())
 	}
@@ -140,7 +141,7 @@ func (s *SmartContract) changeSalmonHolder(APIstub shim.ChaincodeStubInterface, 
 	return shim.Success(nil)
 }
 
-func (s *SmartContract) querySalmon(APIstub shim.ChaincodeStubInterface) sc.Response {
+func (s *SmartContract) querySalmon(APIstub shim.ChaincodeStubInterface, args []string) sc.Response {
 	// 0
 	// id
 
@@ -158,6 +159,10 @@ func (s *SmartContract) querySalmon(APIstub shim.ChaincodeStubInterface) sc.Resp
 		return shim.Error("Salmon does not exist")
 	}
 	return shim.Success(salmonAsBytes)
+}
+
+func (s *SmartContract) queryAllSalmon(APIstub shim.ChaincodeStubInterface) sc.Response {
+	return shim.Success([]byte{})
 }
 
 // queryAllSalmon -- used by regulator to check sustainability of supply chain

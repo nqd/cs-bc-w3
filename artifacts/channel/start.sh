@@ -9,3 +9,9 @@ configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx fredrick-alice.tx -
 configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx fredrick-bob.tx -channelID fredrick-bob
 
 configtxgen -profile ThreeOrgsChannel -outputCreateChannelTx transfers.tx -channelID transfers
+
+configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate AliceMSPanchors.tx -channelID transfers -asOrg AliceMSP
+
+configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate BobMSPanchors.tx -channelID transfers -asOrg BobMSP
+
+configtxgen -profile ThreeOrgsChannel -outputAnchorPeersUpdate FredrickMSPanchors.tx -channelID transfers -asOrg FredrickMSP

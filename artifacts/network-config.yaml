@@ -159,7 +159,7 @@ peers:
     grpcOptions:
       ssl-target-name-override: peer0.fredrick.coderschool.vn
     tlsCACerts:
-      path: crypto-config/peerOrganizations/fredrick.coderschool.vn/peers/peer0.fredrick.coderschool.vn/tls/ca.crt
+      path: artifacts/channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/peers/peer0.fredrick.coderschool.vn/tls/ca.crt
 
   peer0.alice.coderschool.vn:
     # this URL is used to send endorsement and query requests
@@ -171,7 +171,7 @@ peers:
     grpcOptions:
       ssl-target-name-override: peer0.alice.coderschool.vn
     tlsCACerts:
-      path: crypto-config/peerOrganizations/alice.coderschool.vn/peers/peer0.alice.coderschool.vn/tls/ca.crt
+      path: artifacts/channel/crypto-config/peerOrganizations/alice.coderschool.vn/peers/peer0.alice.coderschool.vn/tls/ca.crt
 
   peer0.bob.coderschool.vn:
     # this URL is used to send endorsement and query requests
@@ -183,7 +183,7 @@ peers:
     grpcOptions:
       ssl-target-name-override: peer0.bob.coderschool.vn
     tlsCACerts:
-      path: crypto-config/peerOrganizations/bob.coderschool.vn/peers/peer0.bob.coderschool.vn/tls/ca.crt
+      path: artifacts/channel/crypto-config/peerOrganizations/bob.coderschool.vn/peers/peer0.bob.coderschool.vn/tls/ca.crt
 
 #
 # Fabric-CA is a special kind of Certificate Authority provided by Hyperledger Fabric which allows
@@ -198,7 +198,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: crypto-config/peerOrganizations/fredrick.coderschool.vn/ca/ca.fredrick.coderschool.vn-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/ca/ca.fredrick.coderschool.vn-cert.pem
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.
@@ -215,7 +215,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: crypto-config/peerOrganizations/alice.coderschool.vn/ca/ca.alice.coderschool.vn-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/alice.coderschool.vn/ca/ca.alice.coderschool.vn-cert.pem
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.
@@ -232,7 +232,7 @@ certificateAuthorities:
     httpOptions:
       verify: false
     tlsCACerts:
-      path: crypto-config/peerOrganizations/bob.coderschool.vn/ca/ca.bob.coderschool.vn-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/bob.coderschool.vn/ca/ca.bob.coderschool.vn-cert.pem
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.

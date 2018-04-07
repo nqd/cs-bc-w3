@@ -56,6 +56,7 @@ services:
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./fabric-ca-server-config.yaml:/etc/hyperledger/fabric-ca-server/fabric-ca-server-config.yaml
     container_name: ca.fredrick.coderschool.vn
 
   orderer.coderschool.vn:

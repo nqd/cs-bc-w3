@@ -71,17 +71,17 @@ services:
       - ORDERER_GENERAL_TLS_ENABLED=true
       - ORDERER_GENERAL_TLS_PRIVATEKEY=/etc/hyperledger/crypto/orderer/tls/server.key
       - ORDERER_GENERAL_TLS_CERTIFICATE=/etc/hyperledger/crypto/orderer/tls/server.crt
-      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt, /etc/hyperledger/crypto/peerOrg1/tls/ca.crt, /etc/hyperledger/crypto/peerOrg2/tls/ca.crt]
+      - ORDERER_GENERAL_TLS_ROOTCAS=[/etc/hyperledger/crypto/orderer/tls/ca.crt, /etc/hyperledger/crypto/peerAlice/tls/ca.crt, /etc/hyperledger/crypto/peerBob/tls/ca.crt, /etc/hyperledger/crypto/peerFredrick/tls/ca.crt]
     working_dir: /opt/gopath/src/github.com/hyperledger/fabric/orderers
     command: orderer
     ports:
       - 7050:7050
     volumes:
         - ./channel:/etc/hyperledger/configtx
-        - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.coderschool.vn/:/etc/hyperledger/crypto/orderer
-        - ./channel/crypto-config/peerOrganizations/alice.coderschool.vn/peers/peer0.alice.coderschool.vn/:/etc/hyperledger/crypto/peerOrg1
-        - ./channel/crypto-config/peerOrganizations/pop.coderschool.vn/peers/peer0.pop.coderschool.vn/:/etc/hyperledger/crypto/peerOrg2
-        - ./channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/peers/peer0.fredrick.coderschool.vn/:/etc/hyperledger/crypto/peerOrg2
+        - ./channel/crypto-config/ordererOrganizations/coderschool.vn/orderers/orderer.coderschool.vn/:/etc/hyperledger/crypto/orderer
+        - ./channel/crypto-config/peerOrganizations/alice.coderschool.vn/peers/peer0.alice.coderschool.vn/:/etc/hyperledger/crypto/peerAlice
+        - ./channel/crypto-config/peerOrganizations/pop.coderschool.vn/peers/peer0.pop.coderschool.vn/:/etc/hyperledger/crypto/peerBob
+        - ./channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/peers/peer0.fredrick.coderschool.vn/:/etc/hyperledger/crypto/peerFredrick
 
   peer0.alice.coderschool.vn:
     container_name: peer0.alice.coderschool.vn

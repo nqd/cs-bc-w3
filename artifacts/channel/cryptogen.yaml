@@ -1,0 +1,66 @@
+#
+# Copyright IBM Corp. All Rights Reserved.
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+# ---------------------------------------------------------------------------
+# "OrdererOrgs" - Definition of organizations managing orderer nodes
+# ---------------------------------------------------------------------------
+OrdererOrgs:
+  # ---------------------------------------------------------------------------
+  # Orderer
+  # ---------------------------------------------------------------------------
+  - Name: Orderer
+    Domain: coderschool.vn
+
+    # ---------------------------------------------------------------------------
+    # "Specs" - See PeerOrgs below for complete description
+    # ---------------------------------------------------------------------------
+    Specs:
+      - Hostname: orderer
+
+# ---------------------------------------------------------------------------
+# "PeerOrgs" - Definition of organizations managing peer nodes
+# ---------------------------------------------------------------------------
+PeerOrgs:
+  # ---------------------------------------------------------------------------
+  # Alice
+  # ---------------------------------------------------------------------------
+  - Name: Alice
+    Domain: alice.coderschool.vn
+    CA:
+       Hostname: ca # implicitly ca.alice.coderschool.vn
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1
+
+  # ---------------------------------------------------------------------------
+  # Bob
+  # ---------------------------------------------------------------------------
+  - Name: Bob
+    Domain: bob.coderschool.vn
+    CA:
+       Hostname: ca # implicitly ca.bob.coderschool.vn
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1
+
+  # ---------------------------------------------------------------------------
+  # Fredrick
+  # ---------------------------------------------------------------------------
+  - Name: Fredrick
+    Domain: fredrick.coderschool.vn
+    CA:
+       Hostname: ca # implicitly ca.fredrick.coderschool.vn
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+    Users:
+      Count: 1

@@ -38,7 +38,7 @@ services:
       - "8054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
-      - ./channel/crypto-config/peerOrganizations/bob.coderschoo.vn/ca/:/etc/hyperledger/fabric-ca-server-config
+      - ./channel/crypto-config/peerOrganizations/bob.coderschool.vn/ca/:/etc/hyperledger/fabric-ca-server-config
     container_name: ca.bob.coderschool.vn
 
   ca.fredrick.coderschool.vn:
@@ -52,7 +52,7 @@ services:
       - FABRIC_CA_SERVER_TLS_CERTFILE=/etc/hyperledger/fabric-ca-server-config/ca.fredrick.coderschool.vn-cert.pem
       - FABRIC_CA_SERVER_TLS_KEYFILE=/etc/hyperledger/fabric-ca-server-config/key.pem
     ports:
-      - "8054:7054"
+      - "9054:7054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./channel/crypto-config/peerOrganizations/fredrick.coderschoo.vn/ca/:/etc/hyperledger/fabric-ca-server-config

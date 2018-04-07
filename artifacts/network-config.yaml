@@ -39,10 +39,6 @@ version: "1.0"
 channels:
   # name of the channel
   fredrick-alice:
-    # Required. list of orderers designated by the application to use for transactions on this
-    # channel. This list can be a result of access control ("org1" can only access "ordererA"), or
-    # operational decisions to share loads from applications among the orderers.  The values must
-    # be "names" of orgs defined under "organizations/peers"
     orderers:
       - orderer.coderschool.vn
 
@@ -60,59 +56,75 @@ channels:
         ledgerQuery: true
         eventSource: true
 
-    # [Optional]. what chaincodes are expected to exist on this channel? The application can use
-    # this information to validate that the target peers are in the expected state by comparing
-    # this list with the query results of getInstalledChaincodes() and getInstantiatedChaincodes()
     chaincodes:
       - salmon_price_cc:v0
 
+  # name of the channel
+  fredrick-bob:
+    orderers:
+      - orderer.coderschool.vn
+
+    # Required. list of peers from participating orgs
+    peers:
+      peer0.fredrick.coderschool.vn:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer0.bob.coderschool.vn:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    chaincodes:
+      - salmon_price_cc:v0
 #
 # list of participating organizations in this network
 #
 organizations:
-  Org1:
-    mspid: Org1MSP
+  Fredrick:
+    mspid: FredrickMSP
 
     peers:
-      - peer0.org1.example.com
-      - peer1.org1.example.com
+      - peer0.fredrick.coderschool.vn
 
-    # [Optional]. Certificate Authorities issue certificates for identification purposes in a Fabric based
-    # network. Typically certificates provisioning is done in a separate process outside of the
-    # runtime network. Fabric-CA is a special certificate authority that provides a REST APIs for
-    # dynamic certificate management (enroll, revoke, re-enroll). The following section is only for
-    # Fabric-CA servers.
     certificateAuthorities:
-      - ca-org1
+      - ca-fredrick
 
-    # [Optional]. If the application is going to make requests that are reserved to organization
-    # administrators, including creating/updating channels, installing/instantiating chaincodes, it
-    # must have access to the admin identity represented by the private key and signing certificate.
-    # Both properties can be the PEM string or local path to the PEM file. Note that this is mainly for
-    # convenience in development mode, production systems should not expose sensitive information
-    # this way. The SDK should allow applications to set the org admin identity via APIs, and only use
-    # this route as an alternative when it exists.
     adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/5890f0061619c06fb29dea8cb304edecc020fe63f41a6db109f1e227cc1cb2a8_sk
+      path: artifacts/channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/users/Admin@fredrick.coderschool.vn/msp/keystore/key.pem
     signedCert:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/Admin@org1.example.com-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/fredrick.coderschool.vn/users/Admin@fredrick.coderschool.vn/msp/signcerts/Admin@fredrick.coderschool.vn-cert.pem
 
-  # the profile will contain public information about organizations other than the one it belongs to.
-  # These are necessary information to make transaction lifecycles work, including MSP IDs and
-  # peers with a public URL to send transaction proposals. The file will not contain private
-  # information reserved for members of the organization, such as admin key and certificate,
-  # fabric-ca registrar enroll ID and secret, etc.
-  Org2:
-    mspid: Org2MSP
+  Alice:
+    mspid: AliceMSP
+
     peers:
-      - peer0.org2.example.com
-      - peer1.org2.example.com
+      - peer0.alice.coderschool.vn
+
     certificateAuthorities:
-      - ca-org2
+      - ca-alice
+
     adminPrivateKey:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/1995b11d6573ed3be52fcd7a5fa477bc0f183e1f5f398c8281d0ce7c2c75a076_sk
+      path: artifacts/channel/crypto-config/peerOrganizations/alice.coderschool.vn/users/Admin@alice.coderschool.vn/msp/keystore/key.pem
     signedCert:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/Admin@org2.example.com-cert.pem
+      path: artifacts/channel/crypto-config/peerOrganizations/alice.coderschool.vn/users/Admin@alice.coderschool.vn/msp/signcerts/Admin@alice.coderschool.vn-cert.pem
+
+  Bob:
+    mspid: BobMSP
+
+    peers:
+      - peer0.bob.coderschool.vn
+
+    certificateAuthorities:
+      - ca-bob
+
+    adminPrivateKey:
+      path: artifacts/channel/crypto-config/peerOrganizations/bob.coderschool.vn/users/Admin@bob.coderschool.vn/msp/keystore/key.pem
+    signedCert:
+      path: artifacts/channel/crypto-config/peerOrganizations/bob.coderschool.vn/users/Admin@bob.coderschool.vn/msp/signcerts/Admin@bob.coderschool.vn-cert.pem
 
 #
 # List of orderers to send transaction and channel create/update requests to. For the time
@@ -120,24 +132,24 @@ organizations:
 # SDK is implementation specific. Consult each SDK's documentation for its handling of orderers.
 #
 orderers:
-  orderer.example.com:
+  orderer.coderschool.vn:
     url: grpcs://localhost:7050
 
     # these are standard properties defined by the gRPC library
     # they will be passed in as-is to gRPC client constructor
     grpcOptions:
-      ssl-target-name-override: orderer.example.com
+      ssl-target-name-override: orderer.coderschool.vn
       grpc-max-send-message-length: 15
 
     tlsCACerts:
-      path: artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/ca.crt
+      path: artifacts/channel/crypto-config/ordererOrganizations/coderschool.vn/orderers/orderer.coderschool.vn/tls/ca.crt
 
 #
 # List of peers to send various requests to, including endorsement, query
 # and event listener registration.
 #
 peers:
-  peer0.org1.example.com:
+  peer0.fredrick.coderschool.vn:
     # this URL is used to send endorsement and query requests
     url: grpcs://localhost:7051
 
@@ -145,33 +157,33 @@ peers:
     eventUrl: grpcs://localhost:7053
 
     grpcOptions:
-      ssl-target-name-override: peer0.org1.example.com
+      ssl-target-name-override: peer0.fredrick.coderschool.vn
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt
+      path: crypto-config/peerOrganizations/fredrick.coderschool.vn/peers/peer0.fredrick.coderschool.vn/tls/ca.crt
 
-  peer1.org1.example.com:
-    url: grpcs://localhost:7056
-    eventUrl: grpcs://localhost:7058
-    grpcOptions:
-      ssl-target-name-override: peer1.org1.example.com
-    tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/tls/ca.crt
+  peer0.alice.coderschool.vn:
+    # this URL is used to send endorsement and query requests
+    url: grpcs://localhost:7051
 
-  peer0.org2.example.com:
-    url: grpcs://localhost:8051
-    eventUrl: grpcs://localhost:8053
-    grpcOptions:
-      ssl-target-name-override: peer0.org2.example.com
-    tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt
+    # this URL is used to connect the EventHub and registering event listeners
+    eventUrl: grpcs://localhost:7053
 
-  peer1.org2.example.com:
-    url: grpcs://localhost:8056
-    eventUrl: grpcs://localhost:8058
     grpcOptions:
-      ssl-target-name-override: peer1.org2.example.com
+      ssl-target-name-override: peer0.alice.coderschool.vn
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt
+      path: crypto-config/peerOrganizations/alice.coderschool.vn/peers/peer0.alice.coderschool.vn/tls/ca.crt
+
+  peer0.bob.coderschool.vn:
+    # this URL is used to send endorsement and query requests
+    url: grpcs://localhost:7051
+
+    # this URL is used to connect the EventHub and registering event listeners
+    eventUrl: grpcs://localhost:7053
+
+    grpcOptions:
+      ssl-target-name-override: peer0.bob.coderschool.vn
+    tlsCACerts:
+      path: crypto-config/peerOrganizations/bob.coderschool.vn/peers/peer0.bob.coderschool.vn/tls/ca.crt
 
 #
 # Fabric-CA is a special kind of Certificate Authority provided by Hyperledger Fabric which allows
@@ -179,14 +191,14 @@ peers:
 # Certificate Authority instead of Fabric-CA, in which case this section would not be specified.
 #
 certificateAuthorities:
-  ca-org1:
+  ca-fredrick:
     url: https://localhost:7054
     # the properties specified under this object are passed to the 'http' client verbatim when
     # making the request to the Fabric-CA server
     httpOptions:
       verify: false
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org1.example.com/ca/ca.org1.example.com-cert.pem
+      path: crypto-config/peerOrganizations/fredrick.coderschool.vn/ca/ca.fredrick.coderschool.vn-cert.pem
 
     # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
     # needed to enroll and invoke new users.
@@ -194,16 +206,38 @@ certificateAuthorities:
       - enrollId: admin
         enrollSecret: adminpw
     # [Optional] The optional name of the CA.
-    caName: ca-org1
+    caName: ca-fredrick
 
-  ca-org2:
-    url: https://localhost:8054
+  ca-alice:
+    url: https://localhost:7054
+    # the properties specified under this object are passed to the 'http' client verbatim when
+    # making the request to the Fabric-CA server
     httpOptions:
       verify: false
     tlsCACerts:
-      path: artifacts/channel/crypto-config/peerOrganizations/org2.example.com/ca/ca.org2.example.com-cert.pem
+      path: crypto-config/peerOrganizations/alice.coderschool.vn/ca/ca.alice.coderschool.vn-cert.pem
+
+    # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
+    # needed to enroll and invoke new users.
     registrar:
       - enrollId: admin
         enrollSecret: adminpw
     # [Optional] The optional name of the CA.
-    caName: ca-org2
+    caName: ca-alice
+
+  ca-bob:
+    url: https://localhost:7054
+    # the properties specified under this object are passed to the 'http' client verbatim when
+    # making the request to the Fabric-CA server
+    httpOptions:
+      verify: false
+    tlsCACerts:
+      path: crypto-config/peerOrganizations/bob.coderschool.vn/ca/ca.bob.coderschool.vn-cert.pem
+
+    # Fabric-CA supports dynamic user enrollment via REST APIs. A "root" user, a.k.a registrar, is
+    # needed to enroll and invoke new users.
+    registrar:
+      - enrollId: admin
+        enrollSecret: adminpw
+    # [Optional] The optional name of the CA.
+    caName: ca-bob

@@ -14,7 +14,7 @@ fi
 
 starttime=$(date +%s)
 
-CC_SRC_PATH="github.com/salmon/go"
+CC_SRC_PATH="github.com/nqd/salmon_transfer"
 # CC_SRC_PATH="$PWD/artifacts/src/github.com/salmon/node"
 
 echo "POST request Enroll on Alice  ..."
@@ -131,7 +131,41 @@ curl -s -X POST \
 echo
 echo
 
+# ---------
 # todo: all join transfers
+echo "POST request Join channel on Transfers"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/transfers/peers \
+  -H "authorization: Bearer $FREDRICK_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.fredrick.coderschool.vn"]
+}'
+echo
+echo
+echo "POST request Join channel on Transfer"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/transfers/peers \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.bob.coderschool.vn"]
+}'
+echo
+echo
+echo "POST request Join channel on Transfer"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/transfers/peers \
+  -H "authorization: Bearer $ALICE_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.alice.coderschool.vn"]
+}'
+echo
+echo
 
 # -------------------------------
 echo "POST Install chaincode on Alice"
@@ -175,7 +209,7 @@ curl -s -X POST \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"peers\": [\"peer0.alice.coderschool.vn\"],
+	\"peers\": [\"peer0.alice.coderschool.vn\",\"peer0.bob.coderschool.vn\",\"peer0.fredrick.coderschool.vn\"],
 	\"chaincodeName\":\"salmon_transfer_cc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
 	\"chaincodeType\": \"go\",

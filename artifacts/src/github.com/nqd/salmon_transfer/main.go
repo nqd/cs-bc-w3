@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -35,6 +36,7 @@ type deal struct {
  * Best practice is to have any Ledger initialization in separate function -- see initLedger()
  */
 func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
+	log.Println(">> salmon transfer: init")
 	return shim.Success(nil)
 }
 

@@ -177,16 +177,44 @@ curl -s -X POST \
   -d "{
 	\"peers\": [\"peer0.alice.coderschool.vn\"],
 	\"chaincodeName\":\"salmon_price_cc\",
-	\"chaincodePath\":\"$CC_SRC_PATH\",
+	\"chaincodePath\":\"github.com/nqd/salmon_price\",
+	\"chaincodeType\": \"go\",
+	\"chaincodeVersion\":\"v0\"
+}"
+echo
+echo
+echo "POST Install chaincode on Bob"
+echo
+curl -s -X POST \
+  http://localhost:4000/chaincodes \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.bob.coderschool.vn\"],
+	\"chaincodeName\":\"salmon_price_cc\",
+	\"chaincodePath\":\"github.com/nqd/salmon_price\",
+	\"chaincodeType\": \"go\",
+	\"chaincodeVersion\":\"v0\"
+}"
+echo
+echo
+echo "POST Install chaincode on Fredrick"
+echo
+curl -s -X POST \
+  http://localhost:4000/chaincodes \
+  -H "authorization: Bearer $FREDRICK_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.fredrick.coderschool.vn\"],
+	\"chaincodeName\":\"salmon_price_cc\",
+	\"chaincodePath\":\"github.com/nqd/salmon_price\",
 	\"chaincodeType\": \"go\",
 	\"chaincodeVersion\":\"v0\"
 }"
 echo
 echo
 
-# todo: install on bob and fredrick
-
-echo "POST instantiate chaincode on peer0 of Alice"
+echo "POST instantiate chaincode on fredrick-alice"
 echo
 curl -s -X POST \
   http://localhost:4000/channels/fredrick-alice/chaincodes \
@@ -196,31 +224,72 @@ curl -s -X POST \
 	\"chaincodeName\":\"salmon_price_cc\",
 	\"chaincodeVersion\":\"v0\",
 	\"chaincodeType\": \"go\",
-	\"args\":[\"a\",\"100\",\"b\",\"200\"]
+	\"args\":[]
+}"
+echo
+echo
+echo "POST instantiate chaincode on fredrick-bob"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/fredrick-bob/chaincodes \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"chaincodeName\":\"salmon_price_cc\",
+	\"chaincodeVersion\":\"v0\",
+	\"chaincodeType\": \"go\",
+	\"args\":[]
 }"
 echo
 echo
 
 # -------------------------------
-echo "POST Install chaincode on Alice"
+echo "POST Install salmon_transfer chaincode on Alice"
 echo
 curl -s -X POST \
   http://localhost:4000/chaincodes \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"peers\": [\"peer0.alice.coderschool.vn\",\"peer0.bob.coderschool.vn\",\"peer0.fredrick.coderschool.vn\"],
+	\"peers\": [\"peer0.alice.coderschool.vn\"],
 	\"chaincodeName\":\"salmon_transfer_cc\",
-	\"chaincodePath\":\"$CC_SRC_PATH\",
+	\"chaincodePath\":\"github.com/nqd/salmon_transfer\",
 	\"chaincodeType\": \"go\",
 	\"chaincodeVersion\":\"v0\"
 }"
 echo
 echo
-
-# todo: install on bob and fredrick
-
-echo "POST instantiate chaincode on peer0 of Alice"
+echo "POST Install salmon_transfer chaincode on Bob"
+echo
+curl -s -X POST \
+  http://localhost:4000/chaincodes \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.bob.coderschool.vn\"],
+	\"chaincodeName\":\"salmon_transfer_cc\",
+	\"chaincodePath\":\"github.com/nqd/salmon_transfer\",
+	\"chaincodeType\": \"go\",
+	\"chaincodeVersion\":\"v0\"
+}"
+echo
+echo
+echo "POST Install salmon_transfer chaincode on Bob"
+echo
+curl -s -X POST \
+  http://localhost:4000/chaincodes \
+  -H "authorization: Bearer $FREDRICK_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.fredrick.coderschool.vn\"],
+	\"chaincodeName\":\"salmon_transfer_cc\",
+	\"chaincodePath\":\"github.com/nqd/salmon_transfer\",
+	\"chaincodeType\": \"go\",
+	\"chaincodeVersion\":\"v0\"
+}"
+echo
+echo
+echo "POST instantiate salmon_transfer chaincode"
 echo
 curl -s -X POST \
   http://localhost:4000/channels/transfers/chaincodes \
@@ -234,6 +303,7 @@ curl -s -X POST \
 }"
 echo
 echo
+
 # ----------------------------------
 echo "POST invoke chaincode on peers of Alice"
 echo

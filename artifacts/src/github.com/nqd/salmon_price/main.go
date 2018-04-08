@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"strconv"
 	"time"
 
@@ -35,6 +36,24 @@ type deal struct {
  * Best practice is to have any Ledger initialization in separate function -- see initLedger()
  */
 func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
+	log.Println(">> salmon transfer: init")
+	salmons := []salmon{
+		salmon{
+			Vessel:   "vessel no1",
+			Datetime: time.Now().Format(time.UnixDate),
+			Location: "somewhere",
+			Holder:   "someone",
+		},
+	}
+	log.Printf("salmons %v\n", salmons)
+
+	i := 0
+	for i < len(salmons) {
+		salmonAsBytes, _ := json.Marshal(salmons[i])
+		APIstub.PutState("SALMON"+strconv.Itoa(i), salmonAsBytes)
+		fmt.Println("Added", salmons[i])
+		i = i + 1
+	}
 	return shim.Success(nil)
 }
 
@@ -150,6 +169,8 @@ func (s *SmartContract) querySalmon(APIstub shim.ChaincodeStubInterface, args []
 	}
 
 	id := args[0]
+
+	log.Printf("querySalmon with id = %s\n", id)
 
 	salmonAsBytes, err := APIstub.GetState(id)
 	if err != nil {

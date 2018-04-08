@@ -37,6 +37,24 @@ type deal struct {
  */
 func (s *SmartContract) Init(APIstub shim.ChaincodeStubInterface) sc.Response {
 	log.Println(">> salmon transfer: init")
+	salmons := []salmon{
+		salmon{
+			Vessel:   "vessel no1",
+			Datetime: time.Now().Format(time.UnixDate),
+			Location: "somewhere",
+			Holder:   "someone",
+		},
+	}
+	log.Printf("salmons %v\n", salmons)
+
+	i := 0
+	for i < len(salmons) {
+		salmonAsBytes, _ := json.Marshal(salmons[i])
+		APIstub.PutState("SALMON"+strconv.Itoa(i), salmonAsBytes)
+		fmt.Println("Added", salmons[i])
+		i = i + 1
+	}
+
 	return shim.Success(nil)
 }
 

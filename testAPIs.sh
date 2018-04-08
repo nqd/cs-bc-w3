@@ -22,7 +22,7 @@ echo
 ORG1_TOKEN=$(curl -s -X POST \
   http://localhost:4000/users \
   -H "content-type: application/x-www-form-urlencoded" \
-  -d 'username=alice&orgName=alice')
+  -d 'username=aliceuser&orgName=alice')
 echo $ORG1_TOKEN
 ORG1_TOKEN=$(echo $ORG1_TOKEN | ./jq ".token" | sed "s/\"//g")
 echo

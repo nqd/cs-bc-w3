@@ -80,6 +80,34 @@ channels:
 
     chaincodes:
       - salmon_price_cc:v0
+
+  # name of the channel
+  transfers:
+    orderers:
+      - orderer.coderschool.vn
+
+    # Required. list of peers from participating orgs
+    peers:
+      peer0.fredrick.coderschool.vn:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer0.bob.coderschool.vn:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+      peer0.alice.coderschool.vn:
+        endorsingPeer: true
+        chaincodeQuery: true
+        ledgerQuery: true
+        eventSource: true
+
+    chaincodes:
+      - salmon_transfer_cc:v0
 #
 # list of participating organizations in this network
 #

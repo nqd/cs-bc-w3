@@ -77,8 +77,8 @@ curl -s -X POST \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"channelName":"transfer",
-	"channelConfigPath":"../artifacts/channel/transfer.tx"
+	"channelName":"transfers",
+	"channelConfigPath":"../artifacts/channel/transfers.tx"
 }'
 echo
 echo

@@ -83,7 +83,6 @@ curl -s -X POST \
 echo
 echo
 
-exit
 sleep 5
 echo "POST request Join channel on Fredrick-Alice"
 echo
@@ -92,23 +91,49 @@ curl -s -X POST \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.alice.example.com","peer0.fredrick.example.com"]
+	"peers": ["peer0.alice.coderschool.vn"]
 }'
 echo
 echo
 
+echo "POST request Join channel on Fredrick-Alice"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/fredrick-alice/peers \
+  -H "authorization: Bearer $FREDRICK_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.fredrick.coderschool.vn"]
+}'
+echo
+echo
+# ---------
 echo "POST request Join channel on Fredrick-Bob"
 echo
 curl -s -X POST \
-  http://localhost:4000/channels/fredrick-/peers \
+  http://localhost:4000/channels/fredrick-bob/peers \
+  -H "authorization: Bearer $FREDRICK_TOKEN" \
+  -H "content-type: application/json" \
+  -d '{
+	"peers": ["peer0.fredrick.coderschool.vn"]
+}'
+echo
+echo
+echo "POST request Join channel on Fredrick-Bob"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/fredrick-bob/peers \
   -H "authorization: Bearer $BOB_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org2.example.com","peer1.org2.example.com"]
+	"peers": ["peer0.bob.coderschool.vn"]
 }'
 echo
 echo
 
+# todo: all join transfers
+
+# -------------------------------
 echo "POST Install chaincode on Alice"
 echo
 curl -s -X POST \
@@ -116,46 +141,66 @@ curl -s -X POST \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"peers\": [\"peer0.org1.example.com\",\"peer1.org1.example.com\"],
-	\"chaincodeName\":\"mycc\",
+	\"peers\": [\"peer0.alice.coderschool.vn\"],
+	\"chaincodeName\":\"salmon_price_cc\",
 	\"chaincodePath\":\"$CC_SRC_PATH\",
-	\"chaincodeType\": \"$LANGUAGE\",
+	\"chaincodeType\": \"go\",
 	\"chaincodeVersion\":\"v0\"
 }"
 echo
 echo
 
-echo "POST Install chaincode on Bob"
-echo
-curl -s -X POST \
-  http://localhost:4000/chaincodes \
-  -H "authorization: Bearer $BOB_TOKEN" \
-  -H "content-type: application/json" \
-  -d "{
-	\"peers\": [\"peer0.org2.example.com\",\"peer1.org2.example.com\"],
-	\"chaincodeName\":\"mycc\",
-	\"chaincodePath\":\"$CC_SRC_PATH\",
-	\"chaincodeType\": \"$LANGUAGE\",
-	\"chaincodeVersion\":\"v0\"
-}"
-echo
-echo
+# todo: install on bob and fredrick
 
-echo "POST instantiate chaincode on peer1 of Alice"
+echo "POST instantiate chaincode on peer0 of Alice"
 echo
 curl -s -X POST \
-  http://localhost:4000/channels/mychannel/chaincodes \
+  http://localhost:4000/channels/fredrick-alice/chaincodes \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d "{
-	\"chaincodeName\":\"mycc\",
+	\"chaincodeName\":\"salmon_price_cc\",
 	\"chaincodeVersion\":\"v0\",
-	\"chaincodeType\": \"$LANGUAGE\",
+	\"chaincodeType\": \"go\",
 	\"args\":[\"a\",\"100\",\"b\",\"200\"]
 }"
 echo
 echo
 
+# -------------------------------
+echo "POST Install chaincode on Alice"
+echo
+curl -s -X POST \
+  http://localhost:4000/chaincodes \
+  -H "authorization: Bearer $ALICE_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.alice.coderschool.vn\"],
+	\"chaincodeName\":\"salmon_transfer_cc\",
+	\"chaincodePath\":\"$CC_SRC_PATH\",
+	\"chaincodeType\": \"go\",
+	\"chaincodeVersion\":\"v0\"
+}"
+echo
+echo
+
+# todo: install on bob and fredrick
+
+echo "POST instantiate chaincode on peer0 of Alice"
+echo
+curl -s -X POST \
+  http://localhost:4000/channels/transfers/chaincodes \
+  -H "authorization: Bearer $ALICE_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"chaincodeName\":\"salmon_transfer_cc\",
+	\"chaincodeVersion\":\"v0\",
+	\"chaincodeType\": \"go\",
+	\"args\":[]
+}"
+echo
+echo
+# ----------------------------------
 echo "POST invoke chaincode on peers of Alice"
 echo
 TRX_ID=$(curl -s -X POST \
@@ -163,7 +208,7 @@ TRX_ID=$(curl -s -X POST \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json" \
   -d '{
-	"peers": ["peer0.org1.example.com","peer1.org1.example.com"],
+	"peers": ["peer0.org1.coderschool.vn","peer1.org1.coderschool.vn"],
 	"fcn":"move",
 	"args":["a","b","10"]
 }')
@@ -174,7 +219,7 @@ echo
 echo "GET query chaincode on peer1 of Alice"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%22a%22%5D" \
+  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.coderschool.vn&fcn=query&args=%5B%22a%22%5D" \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo
@@ -183,7 +228,7 @@ echo
 echo "GET query Block by blockNumber"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.example.com" \
+  "http://localhost:4000/channels/mychannel/blocks/1?peer=peer0.org1.coderschool.vn" \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo
@@ -191,7 +236,7 @@ echo
 
 echo "GET query Transaction by TransactionID"
 echo
-curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?peer=peer0.org1.example.com \
+curl -s -X GET http://localhost:4000/channels/mychannel/transactions/$TRX_ID?peer=peer0.org1.coderschool.vn \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo
@@ -215,7 +260,7 @@ echo
 echo "GET query ChainInfo"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel?peer=peer0.org1.example.com" \
+  "http://localhost:4000/channels/mychannel?peer=peer0.org1.coderschool.vn" \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo
@@ -224,7 +269,7 @@ echo
 echo "GET query Installed chaincodes"
 echo
 curl -s -X GET \
-  "http://localhost:4000/chaincodes?peer=peer0.org1.example.com" \
+  "http://localhost:4000/chaincodes?peer=peer0.org1.coderschool.vn" \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo
@@ -233,7 +278,7 @@ echo
 echo "GET query Instantiated chaincodes"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/chaincodes?peer=peer0.org1.example.com" \
+  "http://localhost:4000/channels/mychannel/chaincodes?peer=peer0.org1.coderschool.vn" \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo
@@ -242,7 +287,7 @@ echo
 echo "GET query Channels"
 echo
 curl -s -X GET \
-  "http://localhost:4000/channels?peer=peer0.org1.example.com" \
+  "http://localhost:4000/channels?peer=peer0.org1.coderschool.vn" \
   -H "authorization: Bearer $ALICE_TOKEN" \
   -H "content-type: application/json"
 echo

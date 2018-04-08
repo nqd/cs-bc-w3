@@ -151,10 +151,10 @@ orderers:
 peers:
   peer0.fredrick.coderschool.vn:
     # this URL is used to send endorsement and query requests
-    url: grpcs://localhost:7051
+    url: grpcs://localhost:8051
 
     # this URL is used to connect the EventHub and registering event listeners
-    eventUrl: grpcs://localhost:7053
+    eventUrl: grpcs://localhost:8053
 
     grpcOptions:
       ssl-target-name-override: peer0.fredrick.coderschool.vn
@@ -175,10 +175,10 @@ peers:
 
   peer0.bob.coderschool.vn:
     # this URL is used to send endorsement and query requests
-    url: grpcs://localhost:7051
+    url: grpcs://localhost:7056
 
     # this URL is used to connect the EventHub and registering event listeners
-    eventUrl: grpcs://localhost:7053
+    eventUrl: grpcs://localhost:7058
 
     grpcOptions:
       ssl-target-name-override: peer0.bob.coderschool.vn

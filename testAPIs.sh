@@ -319,6 +319,24 @@ curl -s -X POST \
 echo
 echo
 
+curl -s -X POST \
+  http://localhost:4000/channels/transfers/chaincodes/salmon_transfer_cc \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json" \
+  -d "{
+	\"peers\": [\"peer0.bob.coderschool.vn\"],
+	\"fcn\":\"recordSalmon\",
+	\"args\":[\"1\",\"1\",\"1\",\"1\",\"1\"]
+}"
+curl -s -X GET http://localhost:4000/channels/transfers/transactions/751f0dc07c4229e5274f5279e2cd99ccb6cff37a1d7447dacaf2966b1cccb2af?peer=peer0.bob.coderschool.vn \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json"
+
+curl -s -X GET \
+  "http://localhost:4000/channels/transfers/chaincodes/salmon_transfer_cc?peer=peer0.bob.coderschool.vn&fcn=querySalmon&args=%5B%221%22%5D" \
+  -H "authorization: Bearer $BOB_TOKEN" \
+  -H "content-type: application/json"
+echo
 # echo "GET query chaincode on peer1 of Alice"
 # echo
 # curl -s -X GET \
